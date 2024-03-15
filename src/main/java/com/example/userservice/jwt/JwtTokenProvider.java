@@ -1,7 +1,6 @@
 package com.example.userservice.jwt;
 
 import com.example.userservice.exception.InvalidTokenException;
-import com.example.userservice.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +22,6 @@ public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
     private final UserDetailsService userDetailsService;
-    private final UserService userService;
     private Key key;
 
     @PostConstruct

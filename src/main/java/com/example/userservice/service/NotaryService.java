@@ -11,5 +11,5 @@ import java.security.NoSuchAlgorithmException;
 
 public interface NotaryService {
     Page<UserDtoForViewAll> getAll(Integer page, Integer pageSize);
-    void add(NotaryDtoForAdd notaryDtoForAdd);
+    void add(NotaryDtoForAdd notaryDtoForAdd) throws IOException;
 }

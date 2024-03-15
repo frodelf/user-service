@@ -1,7 +1,6 @@
 package com.example.userservice.service.impl;
 
 import com.example.userservice.entity.enums.StatusUser;
-import com.example.userservice.entity.users.Admin;
 import com.example.userservice.entity.users.User;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.service.UserService;
@@ -45,7 +44,6 @@ public class UserServiceImpl implements UserService {
     public void save(User user) {
         userRepository.save(user);
     }
-
     @Override
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
@@ -55,12 +53,11 @@ public class UserServiceImpl implements UserService {
                 }
         );
     }
-
     @Override
+    @Transactional
     public void deleteById(Long id) {
         User user = getById(id);
         user.setStatus(StatusUser.REMOVE);
         save(user);
     }
-
 }
