@@ -1,8 +1,8 @@
 package com.example.userservice.service.impl;
 
-import com.example.userservice.dto.notary.NotaryDtoForAdd;
+import com.example.userservice.dto.user.UserDtoForAdd;
 import com.example.userservice.dto.user.UserDtoForViewAll;
-import com.example.userservice.mapper.notary.NotaryMapperForAdd;
+import com.example.userservice.mapper.user.UserMapperForAdd;
 import com.example.userservice.mapper.user.UserMapperForViewAll;
 import com.example.userservice.repository.NotaryRepository;
 import com.example.userservice.service.NotaryService;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class NotaryServiceImpl implements NotaryService {
     private final UserMapperForViewAll userMapperForViewAll;
-    private final NotaryMapperForAdd notaryMapperForAdd;
+    private final UserMapperForAdd userMapperForAdd;
     private final NotaryRepository notaryRepository;
     private final UserService userService;
 
@@ -34,8 +34,7 @@ public class NotaryServiceImpl implements NotaryService {
     }
 
     @Override
-    public void add(NotaryDtoForAdd notaryDtoForAdd) throws IOException {
-        userService.save(notaryMapperForAdd.updateEntity(notaryDtoForAdd, userService));
-
+    public void add(UserDtoForAdd userDtoForAdd) throws IOException {
+        userService.save(userMapperForAdd.updateEntity(userDtoForAdd, userService));
     }
 }

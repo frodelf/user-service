@@ -1,8 +1,10 @@
 package com.example.userservice.service.impl;
 
+import com.example.userservice.dto.consumer.ConsumerDtoForAdd;
 import com.example.userservice.dto.user.UserDtoForViewAll;
 import com.example.userservice.entity.enums.StatusUser;
 import com.example.userservice.entity.users.Consumer;
+import com.example.userservice.mapper.consumer.ConsumerMapperForAdd;
 import com.example.userservice.mapper.user.UserMapperForViewAll;
 import com.example.userservice.repository.ConsumerRepository;
 import com.example.userservice.service.ConsumerService;
@@ -16,12 +18,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class ConsumerServiceImpl implements ConsumerService {
     private final ConsumerRepository consumerRepository;
     private final UserMapperForViewAll userMapperForViewAll;
+    private final ConsumerMapperForAdd consumerMapperForAdd;
     private final UserService userService;
     @Override
     public Page<UserDtoForViewAll> getAll(Integer page, Integer pageSize, String consumerName, StatusUser statusUser) {
@@ -39,5 +44,9 @@ public class ConsumerServiceImpl implements ConsumerService {
         }
         consumer.setStatus(statusUser);
         userService.save(consumer);
+    }
+    @Override
+    public void add(ConsumerDtoForAdd consumerDtoForAdd) throws IOException {
+        userService.save(consumerMapperForAdd.updateEntity(consumerDtoForAdd, userService));
     }
 }

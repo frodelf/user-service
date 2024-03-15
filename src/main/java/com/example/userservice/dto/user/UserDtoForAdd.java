@@ -1,4 +1,4 @@
-package com.example.userservice.dto.notary;
+package com.example.userservice.dto.user;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -7,7 +7,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class NotaryDtoForAdd {
+public class UserDtoForAdd {
     private Long id;
     private MultipartFile image;
     @Size(max = 100, message = "{error.field.size.max}")
@@ -22,4 +22,7 @@ public class NotaryDtoForAdd {
     @NotNull(message = "{error.field.empty}")
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "{error.field.email}")
     private String email;
+    @Size(min = 8, max = 100, message = "{error.field.size.max}")
+    // TODO: 15.03.2024 додати в макапі це поле
+    private String password;
 }

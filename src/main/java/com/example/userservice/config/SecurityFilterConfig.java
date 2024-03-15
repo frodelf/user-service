@@ -23,10 +23,11 @@ public class SecurityFilterConfig {
                 .authorizeHttpRequests(
                         auth -> {
                             auth
-//                                    .requestMatchers(
-//                                            "/api/v1/notary/**"
-//                                    ).hasRole("NOTARY")
-                                    .anyRequest().authenticated();
+                                .requestMatchers("/api/v1/consumer/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/consumer/add").hasAnyRole("CONSUMER", "ADMIN")
+                                .requestMatchers("/api/v1/notary/add").hasAnyRole("NOTARY", "ADMIN")
+                                .requestMatchers("/api/v1/builder/add").hasAnyRole("BUILDER", "ADMIN")
+                                .anyRequest().authenticated();
                         })
                 .addFilterAfter(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
