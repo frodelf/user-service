@@ -1,6 +1,5 @@
 package com.example.userservice.config;
 
-import com.example.userservice.entity.users.UserDetailsImpl;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityBeansConfig {
-    private final UserService userService;
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> new UserDetailsImpl().getUserDetailsByUsers(userService.getByEmail(username));
-    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

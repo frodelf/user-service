@@ -48,4 +48,9 @@ public class NotaryController {
         userService.deleteById(notaryId);
         return ResponseEntity.ok("deleted");
     }
+    @PutMapping("/add/user/{userId}")
+    public ResponseEntity<String> addUserForAuthNotary(@PathVariable Long userId){
+        notaryService.addUserForAuthNotary(userId);
+        return ResponseEntity.ok("updated");
+    }
 }

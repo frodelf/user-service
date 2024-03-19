@@ -2,6 +2,8 @@ package com.example.userservice.service.impl;
 
 import com.example.userservice.dto.user.UserDtoForAdd;
 import com.example.userservice.dto.user.UserDtoForViewAll;
+import com.example.userservice.entity.users.Consumer;
+import com.example.userservice.entity.users.Notary;
 import com.example.userservice.mapper.user.UserMapperForAdd;
 import com.example.userservice.mapper.user.UserMapperForViewAll;
 import com.example.userservice.repository.NotaryRepository;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -34,7 +37,16 @@ public class NotaryServiceImpl implements NotaryService {
     }
 
     @Override
+    @Transactional
     public void add(UserDtoForAdd userDtoForAdd) throws IOException {
         userService.save(userMapperForAdd.updateEntity(userDtoForAdd, userService));
+    }
+
+    @Override
+    @Transactional
+    public void addUserForAuthNotary(Long userId) {
+        Notary notary = (Notary) userService.getAuthUser();
+        notary.getConsumer().add((Consumer) userService.getById(userId));
+        userService.save(notary);
     }
 }

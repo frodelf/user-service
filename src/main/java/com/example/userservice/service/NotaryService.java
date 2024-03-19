@@ -10,4 +10,5 @@ import java.io.IOException;
 public interface NotaryService {
     Page<UserDtoForViewAll> getAll(Integer page, Integer pageSize);
     void add(UserDtoForAdd userDtoForAdd) throws IOException;
+    void addUserForAuthNotary(Long userId);
 }

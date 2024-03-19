@@ -9,19 +9,21 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
-    private final UserDetailsService userDetailsService;
     private Key key;
 
     @PostConstruct
@@ -53,9 +55,27 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    private List<SimpleGrantedAuthority> getRoles(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        LinkedHashMap rolesMap = (LinkedHashMap) claims.get("roles");
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<String> roles = rolesMap.values().stream().toList();
+        authorities.add(new SimpleGrantedAuthority(roles.get(1)));
+        return authorities;
+    }
+
     public Authentication getAuthentication(String token) {
         String username = getUsername(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        List<SimpleGrantedAuthority> roles = getRoles(token);
+
+        User principal = new User(username, "", roles);
+
+        return new UsernamePasswordAuthenticationToken(principal, token, roles);
     }
 }

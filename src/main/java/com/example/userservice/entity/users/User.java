@@ -1,6 +1,5 @@
 package com.example.userservice.entity.users;
 
-import com.example.userservice.entity.Role;
 import com.example.userservice.entity.enums.StatusUser;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,6 +17,5 @@ public abstract class User {
     private String email;
     private String password;
     private StatusUser status;
-    @ManyToOne
-    private Role role;
+    private Long role;
 }

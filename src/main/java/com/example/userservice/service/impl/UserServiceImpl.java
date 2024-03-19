@@ -7,6 +7,9 @@ import com.example.userservice.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,5 +62,15 @@ public class UserServiceImpl implements UserService {
         User user = getById(id);
         user.setStatus(StatusUser.REMOVE);
         save(user);
+    }
+
+    @Override
+    public User getAuthUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            return getByEmail(currentUserName);
+        }
+        else throw new RuntimeException("The manager is not authorized");
     }
 }

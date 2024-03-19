@@ -24,10 +24,10 @@ public class SecurityFilterConfig {
                         auth -> {
                             auth
                                 .requestMatchers("/api/v1/consumer/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/v1/consumer/add").hasAnyRole("CONSUMER", "ADMIN")
-                                .requestMatchers("/api/v1/notary/add").hasAnyRole("NOTARY", "ADMIN")
-                                .requestMatchers("/api/v1/builder/add").hasAnyRole("BUILDER", "ADMIN")
-                                .anyRequest().authenticated();
+                                .requestMatchers("/api/v1/consumer/**").hasAnyRole("CONSUMER", "ADMIN")
+                                .requestMatchers("/api/v1/notary/**").hasAnyRole("NOTARY", "ADMIN")
+                                .requestMatchers("/api/v1/builder/**").hasAnyRole("BUILDER", "ADMIN")
+                                .anyRequest().permitAll();
                         })
                 .addFilterAfter(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()

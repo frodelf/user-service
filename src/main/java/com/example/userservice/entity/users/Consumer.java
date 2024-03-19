@@ -1,11 +1,6 @@
 package com.example.userservice.entity.users;
 
-import com.example.userservice.entity.Building;
-import com.example.userservice.entity.Flat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,8 +26,8 @@ public class Consumer extends User{
             joinColumns = @JoinColumn(name = "notary_id"),
             inverseJoinColumns = @JoinColumn(name = "consumer_id"))
     private List<Notary> notaries;
-    @ManyToMany
-    private List<Building> likeBuilders;
-    @ManyToMany
-    private List<Flat> likeFlats;
+    @ElementCollection
+    private List<Long> likeBuilders;
+    @ElementCollection
+    private List<Long> likeFlats;
 }
