@@ -11,4 +11,8 @@ public interface ConsumerService {
     Page<UserDtoForViewAll> getAll(Integer page, Integer pageSize, String consumerName, StatusUser statusUser);
     void changeStatusById(Long consumerId, StatusUser statusUser);
     void add(ConsumerDtoForAdd consumerDtoForAdd) throws IOException;
+    void addToLikeBuildings(Long buildingId);
+    void addToLikeFlats(Long flatId);
+    void removeFromLikeBuildings(Long buildingId);
+    void removeFromLikeFlats(Long flatId);
 }

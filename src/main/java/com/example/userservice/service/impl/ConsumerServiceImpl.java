@@ -4,6 +4,7 @@ import com.example.userservice.dto.consumer.ConsumerDtoForAdd;
 import com.example.userservice.dto.user.UserDtoForViewAll;
 import com.example.userservice.entity.enums.StatusUser;
 import com.example.userservice.entity.users.Consumer;
+import com.example.userservice.entity.users.User;
 import com.example.userservice.mapper.consumer.ConsumerMapperForAdd;
 import com.example.userservice.mapper.user.UserMapperForViewAll;
 import com.example.userservice.repository.ConsumerRepository;
@@ -48,5 +49,25 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public void add(ConsumerDtoForAdd consumerDtoForAdd) throws IOException {
         userService.save(consumerMapperForAdd.updateEntity(consumerDtoForAdd, userService));
+    }
+    public void addToLikeBuildings(Long buildingId){
+        Consumer consumer = (Consumer) userService.getAuthUser();
+        consumer.getLikeBuildings().add(buildingId);
+        userService.save(consumer);
+    }
+    public void addToLikeFlats(Long flatId){
+        Consumer consumer = (Consumer) userService.getAuthUser();
+        consumer.getLikeFlats().add(flatId);
+        userService.save(consumer);
+    }
+    public void removeFromLikeBuildings(Long buildingId){
+        Consumer consumer = (Consumer) userService.getAuthUser();
+        consumer.getLikeBuildings().remove(buildingId);
+        userService.save(consumer);
+    }
+    public void removeFromLikeFlats(Long flatId){
+        Consumer consumer = (Consumer) userService.getAuthUser();
+        consumer.getLikeFlats().remove(flatId);
+        userService.save(consumer);
     }
 }

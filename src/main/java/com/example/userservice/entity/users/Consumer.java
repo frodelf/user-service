@@ -27,7 +27,7 @@ public class Consumer extends User{
             inverseJoinColumns = @JoinColumn(name = "consumer_id"))
     private List<Notary> notaries;
     @ElementCollection
-    private List<Long> likeBuilders;
+    private List<Long> likeBuildings;
     @ElementCollection
     private List<Long> likeFlats;
 }
