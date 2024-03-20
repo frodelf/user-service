@@ -1,4 +1,4 @@
-package com.example.userservice.service.impl;
+package com.example.userservice.service.client;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
@@ -12,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.List;
 
-public class MinioServiceImpl{
+public class MinioServiceClient {
     private final static String URL = "http://localhost:47074/minio/api/v1/minio";
     public static String deleteImage(String image) {
         RestTemplate restTemplate = new RestTemplate();

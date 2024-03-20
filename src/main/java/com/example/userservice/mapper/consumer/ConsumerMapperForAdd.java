@@ -3,7 +3,7 @@ package com.example.userservice.mapper.consumer;
 import com.example.userservice.dto.consumer.ConsumerDtoForAdd;
 import com.example.userservice.entity.users.Consumer;
 import com.example.userservice.service.UserService;
-import com.example.userservice.service.impl.MinioServiceImpl;
+import com.example.userservice.service.client.MinioServiceClient;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -18,8 +18,8 @@ public interface ConsumerMapperForAdd {
         Consumer consumer = new Consumer();
         if(consumerDtoForAdd.getId()!=null) consumer = (Consumer) userService.getById(consumerDtoForAdd.getId());
         updateEntity(consumerDtoForAdd, consumer);
-        if(consumer.getImage()!=null) MinioServiceImpl.deleteImage(consumer.getImage());
-        consumer.setImage(MinioServiceImpl.save(consumerDtoForAdd.getImage()));
+        if(consumer.getImage()!=null) MinioServiceClient.deleteImage(consumer.getImage());
+        consumer.setImage(MinioServiceClient.save(consumerDtoForAdd.getImage()));
         return consumer;
     }
 }

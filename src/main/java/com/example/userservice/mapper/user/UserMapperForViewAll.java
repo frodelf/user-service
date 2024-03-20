@@ -2,7 +2,7 @@ package com.example.userservice.mapper.user;
 
 import com.example.userservice.dto.user.UserDtoForViewAll;
 import com.example.userservice.entity.users.User;
-import com.example.userservice.service.impl.MinioServiceImpl;
+import com.example.userservice.service.client.MinioServiceClient;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ public interface UserMapperForViewAll {
 
     default UserDtoForViewAll toDtoEntity(User user) {
         UserDtoForViewAll userDtoForViewAll = toDto(user);
-        userDtoForViewAll.setImage(MinioServiceImpl.getUrl(user.getImage()));
+        userDtoForViewAll.setImage(MinioServiceClient.getUrl(user.getImage()));
         return userDtoForViewAll;
     }
 
