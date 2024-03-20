@@ -60,12 +60,12 @@ public class ConsumerServiceImpl implements ConsumerService {
         consumer.getLikeFlats().add(flatId);
         userService.save(consumer);
     }
-    public void removeFromLikeBuildings(Long buildingId){
+    public void deleteFromLikeBuildings(Long buildingId){
         Consumer consumer = (Consumer) userService.getAuthUser();
         consumer.getLikeBuildings().remove(buildingId);
         userService.save(consumer);
     }
-    public void removeFromLikeFlats(Long flatId){
+    public void deleteFromLikeFlats(Long flatId){
         Consumer consumer = (Consumer) userService.getAuthUser();
         consumer.getLikeFlats().remove(flatId);
         userService.save(consumer);

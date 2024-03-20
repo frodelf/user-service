@@ -15,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,5 +49,25 @@ public class ConsumerController {
         }
         consumerService.add(consumerDtoForAdd);
         return ResponseEntity.ok(Collections.singletonMap("status", "saved"));
+    }
+    @PutMapping("/add/like-building/{buildingId}")
+    public ResponseEntity<String> addLikeBuilding(@PathVariable Long buildingId){
+        consumerService.addToLikeBuildings(buildingId);
+        return ResponseEntity.ok("changed");
+    }
+    @PutMapping("/add/like-flat/{flatId}")
+    public ResponseEntity<String> addLikeFlat(@PathVariable Long flatId){
+        consumerService.addToLikeFlats(flatId);
+        return ResponseEntity.ok("changed");
+    }
+    @PutMapping("/delete/like-building/{buildingId}")
+    public ResponseEntity<String> deleteLikeBuilding(@PathVariable Long buildingId){
+        consumerService.deleteFromLikeBuildings(buildingId);
+        return ResponseEntity.ok("deleted");
+    }
+    @PutMapping("/delete/like-flat/{flatId}")
+    public ResponseEntity<String> deleteLikeFlat(@PathVariable Long flatId){
+        consumerService.deleteFromLikeFlats(flatId);
+        return ResponseEntity.ok("deleted");
     }
 }

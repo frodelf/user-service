@@ -13,6 +13,6 @@ public interface ConsumerService {
     void add(ConsumerDtoForAdd consumerDtoForAdd) throws IOException;
     void addToLikeBuildings(Long buildingId);
     void addToLikeFlats(Long flatId);
-    void removeFromLikeBuildings(Long buildingId);
-    void removeFromLikeFlats(Long flatId);
+    void deleteFromLikeBuildings(Long buildingId);
+    void deleteFromLikeFlats(Long flatId);
 }
