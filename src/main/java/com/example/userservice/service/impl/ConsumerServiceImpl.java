@@ -47,24 +47,33 @@ public class ConsumerServiceImpl implements ConsumerService {
         userService.save(consumer);
     }
     @Override
+    @Transactional
     public void add(ConsumerDtoForAdd consumerDtoForAdd) throws IOException {
         userService.save(consumerMapperForAdd.updateEntity(consumerDtoForAdd, userService));
     }
+    @Override
+    @Transactional
     public void addToLikeBuildings(Long buildingId){
         Consumer consumer = (Consumer) userService.getAuthUser();
         consumer.getLikeBuildings().add(buildingId);
         userService.save(consumer);
     }
+    @Override
+    @Transactional
     public void addToLikeFlats(Long flatId){
         Consumer consumer = (Consumer) userService.getAuthUser();
         consumer.getLikeFlats().add(flatId);
         userService.save(consumer);
     }
+    @Override
+    @Transactional
     public void deleteFromLikeBuildings(Long buildingId){
         Consumer consumer = (Consumer) userService.getAuthUser();
         consumer.getLikeBuildings().remove(buildingId);
         userService.save(consumer);
     }
+    @Override
+    @Transactional
     public void deleteFromLikeFlats(Long flatId){
         Consumer consumer = (Consumer) userService.getAuthUser();
         consumer.getLikeFlats().remove(flatId);
