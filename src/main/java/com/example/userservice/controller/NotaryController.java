@@ -1,56 +1,58 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.user.UserDtoForViewAll;
-import com.example.userservice.service.NotaryService;
-import com.example.userservice.service.UserService;
-import com.example.userservice.validator.UserValidator;
 import com.example.userservice.dto.user.UserDtoForAdd;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
-@Log4j2
-@RestController
-@RequestMapping("/api/v1/notary")
-@RequiredArgsConstructor
-public class NotaryController {
-    private final NotaryService notaryService;
-    private final UserService userService;
-    private final UserValidator userValidator;
-    @GetMapping("/get-all")
-    public ResponseEntity<Page<UserDtoForViewAll>> getAll(@RequestParam Integer page, @RequestParam Integer pageSize){
-        return ResponseEntity.ok(notaryService.getAll(page, pageSize));
-    }
-    @PostMapping(value = "/add")
-    public ResponseEntity<Map<String, String>> add(@ModelAttribute @Valid UserDtoForAdd userDtoForAdd, BindingResult bindingResult) throws IOException {
-        userValidator.validate(userDtoForAdd, bindingResult);
-        Map<String, String> errorsMap = new HashMap<>();
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> errorsMap.put(error.getField(), error.getDefaultMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMap);
-        }
-        notaryService.add(userDtoForAdd);
-        return ResponseEntity.ok(Collections.singletonMap("status", "saved"));
-    }
-    @DeleteMapping("/delete/{notaryId}")
-    public ResponseEntity<String> deleteById(@PathVariable Long notaryId){
-        userService.deleteById(notaryId);
-        return ResponseEntity.ok("deleted");
-    }
-    @PutMapping("/add/user/{userId}")
-    public ResponseEntity<String> addUserForAuthNotary(@PathVariable Long userId){
-        notaryService.addUserForAuthNotary(userId);
-        return ResponseEntity.ok("updated");
-    }
+@Tag(name = "Notary controller", description = "Notary API")
+public interface NotaryController {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to get all notaries")
+    ResponseEntity<Page<UserDtoForViewAll>> getAll(@Parameter(description = "Page for pagination") @RequestParam Integer page, @Parameter(description = "Page size for page numbering") @RequestParam Integer pageSize);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to add notary")
+    ResponseEntity<Map<String, String>> add(@RequestBody(description = "DTO for adding/updating to notary") @ModelAttribute @Valid UserDtoForAdd userDtoForAdd, BindingResult bindingResult) throws IOException;
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to delete notary by id")
+    ResponseEntity<String> deleteById(@Parameter(description = "Notary id by which notary will be deleted") @PathVariable Long notaryId);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to add user to auth notary")
+    ResponseEntity<String> addUserForAuthNotary(@Parameter(description = "User id by which user will be added to auth notary") @PathVariable Long userId);
 }

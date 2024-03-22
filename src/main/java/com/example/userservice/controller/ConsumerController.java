@@ -3,71 +3,92 @@ package com.example.userservice.controller;
 import com.example.userservice.dto.consumer.ConsumerDtoForAdd;
 import com.example.userservice.dto.user.UserDtoForViewAll;
 import com.example.userservice.entity.enums.StatusUser;
-import com.example.userservice.service.ConsumerService;
-import com.example.userservice.validator.ConsumerValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-
-@Log4j2
-@RestController
-@RequestMapping("/api/v1/consumer")
-@RequiredArgsConstructor
-public class ConsumerController {
-    private final ConsumerService consumerService;
-    private final ConsumerValidator consumerValidator;
-    @GetMapping("/get-all")
-    public ResponseEntity<Page<UserDtoForViewAll>> getAll(@RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam String consumerName){
-        return ResponseEntity.ok(consumerService.getAll(page, pageSize, consumerName, StatusUser.ACTIVE));
-    }
-    @GetMapping("/get-all-blocked")
-    public ResponseEntity<Page<UserDtoForViewAll>> getAllBlocked(@RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam String consumerName){
-        return ResponseEntity.ok(consumerService.getAll(page, pageSize, consumerName, StatusUser.REMOVE));
-    }
-    @PutMapping("/admin/change-status/{consumerId}")
-    public ResponseEntity<String> changeStatusForFlat(@PathVariable Long consumerId, @RequestParam StatusUser statusUser){
-        consumerService.changeStatusById(consumerId, statusUser);
-        return ResponseEntity.ok("changed");
-    }
-    @PostMapping("/add")
-    public ResponseEntity<Map<String, String>> add(@ModelAttribute @Valid ConsumerDtoForAdd consumerDtoForAdd, BindingResult bindingResult) throws IOException {
-        consumerValidator.validate(consumerDtoForAdd, bindingResult);
-        Map<String, String> errorsMap = new HashMap<>();
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> errorsMap.put(error.getField(), error.getDefaultMessage()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMap);
-        }
-        consumerService.add(consumerDtoForAdd);
-        return ResponseEntity.ok(Collections.singletonMap("status", "saved"));
-    }
-    @PutMapping("/add/like-building/{buildingId}")
-    public ResponseEntity<String> addLikeBuilding(@PathVariable Long buildingId){
-        consumerService.addToLikeBuildings(buildingId);
-        return ResponseEntity.ok("changed");
-    }
-    @PutMapping("/add/like-flat/{flatId}")
-    public ResponseEntity<String> addLikeFlat(@PathVariable Long flatId){
-        consumerService.addToLikeFlats(flatId);
-        return ResponseEntity.ok("changed");
-    }
-    @PutMapping("/delete/like-building/{buildingId}")
-    public ResponseEntity<String> deleteLikeBuilding(@PathVariable Long buildingId){
-        consumerService.deleteFromLikeBuildings(buildingId);
-        return ResponseEntity.ok("deleted");
-    }
-    @PutMapping("/delete/like-flat/{flatId}")
-    public ResponseEntity<String> deleteLikeFlat(@PathVariable Long flatId){
-        consumerService.deleteFromLikeFlats(flatId);
-        return ResponseEntity.ok("deleted");
-    }
+@Tag(name = "Consumer controller", description = "Consumer API")
+public interface ConsumerController {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to get all consumers with filtering by consumer name")
+    ResponseEntity<Page<UserDtoForViewAll>> getAll(@Parameter(description = "Page for pagination") @RequestParam Integer page, @Parameter(description = "Page size for page numbering") @RequestParam Integer pageSize, @Parameter(description = "Consumer name for filtering") @RequestParam String consumerName);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to get all blocked consumers with filtering by consumer name")
+    ResponseEntity<Page<UserDtoForViewAll>> getAllBlocked(@Parameter(description = "Page for pagination") @RequestParam Integer page, @Parameter(description = "Page size for page numbering") @RequestParam Integer pageSize, @Parameter(description = "Consumer name for filtering") @RequestParam String consumerName);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to change customer status by id")
+    ResponseEntity<String> changeStatusForConsumer(@Parameter(description = "Consumer id by which status will be changed") @PathVariable Long consumerId, @Parameter(description = "New status for consumer") @RequestParam StatusUser statusUser);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to add consumer")
+    ResponseEntity<Map<String, String>> add(@RequestBody(description = "DTO for adding/updating to consumer") @ModelAttribute @Valid ConsumerDtoForAdd consumerDtoForAdd, BindingResult bindingResult) throws IOException;
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to add building to like buildings by building id")
+    ResponseEntity<String> addLikeBuilding(@Parameter(description = "Building id by which building will be added to like buildings") @PathVariable Long buildingId);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to add flat to like flats by flat id")
+    ResponseEntity<String> addLikeFlat(@Parameter(description = "Flat id by which flat will be added to like flats") @PathVariable Long flatId);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to delete building from like buildings by building id")
+    ResponseEntity<String> deleteLikeBuilding(@Parameter(description = "Building id by which building will be deleted from like buildings") @PathVariable Long buildingId);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authorized"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource not found."),
+    })
+    @Operation(summary = "The request to delete flat from like flats by flat id")
+    ResponseEntity<String> deleteLikeFlat(@Parameter(description = "Flat id by which flat will be deleted from like flats") @PathVariable Long flatId);
 }

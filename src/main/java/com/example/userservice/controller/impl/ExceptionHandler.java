@@ -1,4 +1,4 @@
-package com.example.userservice.controller;
+package com.example.userservice.controller.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
