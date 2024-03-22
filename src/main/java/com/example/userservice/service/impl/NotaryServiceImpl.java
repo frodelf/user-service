@@ -31,22 +31,28 @@ public class NotaryServiceImpl implements NotaryService {
 
     @Override
     public Page<UserDtoForViewAll> getAll(Integer page, Integer pageSize) {
+        log.info("ConsumerServiceImpl-getAll start");
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("id")));
         Page<UserDtoForViewAll> result = userMapperForViewAll.toDtoPage(notaryRepository.findAll(pageable));
+        log.info("ConsumerServiceImpl-getAll finish");
         return result;
     }
 
     @Override
     @Transactional
     public void add(UserDtoForAdd userDtoForAdd) throws IOException {
+        log.info("ConsumerServiceImpl-add start");
         userService.save(userMapperForAdd.updateEntity(userDtoForAdd, userService));
+        log.info("ConsumerServiceImpl-add finish");
     }
 
     @Override
     @Transactional
     public void addUserForAuthNotary(Long userId) {
+        log.info("ConsumerServiceImpl-addUserForAuthNotary start");
         Notary notary = (Notary) userService.getAuthUser();
         notary.getConsumer().add((Consumer) userService.getById(userId));
         userService.save(notary);
+        log.info("ConsumerServiceImpl-addUserForAuthNotary finish");
     }
 }

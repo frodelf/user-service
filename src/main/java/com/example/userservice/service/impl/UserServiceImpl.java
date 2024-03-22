@@ -22,55 +22,69 @@ public class UserServiceImpl implements UserService {
     public boolean validPhone(String telephone) {
         log.info("UserServiceImpl-validTelephone start");
         boolean res = userRepository.existsByPhone(telephone);
-        log.info("UserServiceImpl-validTelephone successfully");
+        log.info("UserServiceImpl-validTelephone finish");
         return res;
     }
     @Override
     public boolean validEmail(String email) {
         log.info("UserServiceImpl-validEmail start");
         boolean res = userRepository.existsByEmail(email);
-        log.info("UserServiceImpl-validEmail successfully");
+        log.info("UserServiceImpl-validEmail finish");
         return res;
     }
     @Override
     public User getById(Long id) {
+        log.info("UserServiceImpl-getById start");
         User user = userRepository.findById(id).orElseThrow(
                 ()-> {
                     log.error("User with id={} not found", id);
                     return new EntityNotFoundException("User with id="+id+" not found");
                 }
         );
+        log.info("UserServiceImpl-getById finish");
         return user;
     }
     @Transactional
     @Override
     public void save(User user) {
+        log.info("UserServiceImpl-save start");
         userRepository.save(user);
+        log.info("UserServiceImpl-save finish");
     }
     @Override
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
+        log.info("UserServiceImpl-getByEmail start");
+        User user = userRepository.findByEmail(email).orElseThrow(
                 ()-> {
                     log.error("User with email={} not found", email);
                     return new EntityNotFoundException("User with email="+email+" not found");
                 }
         );
+        log.info("UserServiceImpl-getByEmail finish");
+        return user;
     }
     @Override
     @Transactional
     public void deleteById(Long id) {
+        log.info("UserServiceImpl-deleteById start");
         User user = getById(id);
         user.setStatus(StatusUser.REMOVE);
         save(user);
+        log.info("UserServiceImpl-deleteById finish");
     }
-
     @Override
     public User getAuthUser() {
+        log.info("UserServiceImpl-getAuthUser start");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
-            return getByEmail(currentUserName);
+            User user = getByEmail(currentUserName);
+            log.info("UserServiceImpl-getAuthUser finish");
+            return user;
         }
-        else throw new RuntimeException("The manager is not authorized");
+        else {
+            log.info("UserServiceImpl-getAuthUser error");
+            throw new RuntimeException("The manager is not authorized");
+        }
     }
 }
