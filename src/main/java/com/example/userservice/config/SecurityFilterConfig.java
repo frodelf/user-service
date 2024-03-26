@@ -27,6 +27,9 @@ public class SecurityFilterConfig {
                                 .requestMatchers("/api/v1/consumer/**").hasAnyRole("CONSUMER", "ADMIN")
                                 .requestMatchers("/api/v1/notary/**").hasAnyRole("NOTARY", "ADMIN")
                                 .requestMatchers("/api/v1/builder/**").hasAnyRole("BUILDER", "ADMIN")
+                                .requestMatchers("/api/v1/user/get-by-id/**").permitAll()
+                                .requestMatchers("/api/v1/user/get-by-email/**").permitAll()
+                                .requestMatchers("/api/v1/user/**").authenticated()
                                 .anyRequest().permitAll();
                         })
                 .addFilterAfter(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
