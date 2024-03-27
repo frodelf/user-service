@@ -19,7 +19,7 @@ public class BuilderServiceImpl implements BuilderService {
     @Override
     public void add(UserDtoForAdd userDtoForAdd) throws IOException {
         log.info("BuilderServiceImpl-add start");
-        userService.save(userMapperForAdd.updateEntity(userDtoForAdd, userService));
+        userService.save(userMapperForAdd.updateBuilder(userDtoForAdd, userService));
         log.info("BuilderServiceImpl-add finish");
     }
 }

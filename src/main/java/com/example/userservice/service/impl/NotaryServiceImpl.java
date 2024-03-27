@@ -42,7 +42,7 @@ public class NotaryServiceImpl implements NotaryService {
     @Transactional
     public void add(UserDtoForAdd userDtoForAdd) throws IOException {
         log.info("ConsumerServiceImpl-add start");
-        userService.save(userMapperForAdd.updateEntity(userDtoForAdd, userService));
+        userService.save(userMapperForAdd.updateNotary(userDtoForAdd, userService));
         log.info("ConsumerServiceImpl-add finish");
     }
 
